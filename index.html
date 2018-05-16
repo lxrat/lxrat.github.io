@@ -249,7 +249,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/使用Python提取ABAQUS计算结果并写入指定文件/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/使用Python提取ABAQUS计算结果/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="geopeony">
@@ -268,7 +268,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/16/使用Python提取ABAQUS计算结果并写入指定文件/" itemprop="url">使用Python提取ABAQUS计算结果并写入指定文件</a></h1>
+                <a class="post-title-link" href="/2018/05/16/使用Python提取ABAQUS计算结果/" itemprop="url">使用Python提取ABAQUS计算结果并写入指定文件</a></h1>
         
 
         <div class="post-meta">
@@ -321,8 +321,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/05/16/使用Python提取ABAQUS计算结果并写入指定文件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/16/使用Python提取ABAQUS计算结果并写入指定文件/" itemprop="commentCount"></span>
+                <a href="/2018/05/16/使用Python提取ABAQUS计算结果/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/16/使用Python提取ABAQUS计算结果/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -351,170 +351,14 @@
 
       
         
-          
-            <a id="more"></a>
-<h1 id="The-total-Python-script"><a href="#The-total-Python-script" class="headerlink" title="The total Python script:"></a>The total Python script:</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> odbAccess <span class="keyword">import</span> *</span><br><span class="line">odb=openOdb(path=<span class="string">'fraction_0.03_test.odb'</span>)</span><br><span class="line">topNodeSet=odb.rootAssembly.instances[<span class="string">'PART-1-1'</span>].nodeSets[<span class="string">'TOPO'</span>]</span><br><span class="line">displacement=odb.steps[<span class="string">'Step-1'</span>].frames[<span class="number">-1</span>].fieldOutputs[<span class="string">'U'</span>]</span><br><span class="line">topDisplacement=displacement.getSubset(region=topNodeSet)</span><br><span class="line">topValues=topDisplacement.values</span><br><span class="line">topcoor=odb.rootAssembly.instances[<span class="string">'PART-1-1'</span>].nodeSets[<span class="string">'TOPO'</span>].nodes</span><br><span class="line">f=open(<span class="string">'XY.dat'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">for</span> nodeCoordinate <span class="keyword">in</span> topcoor:</span><br><span class="line">    <span class="keyword">print</span> &gt;&gt;f, nodeCoordinate.coordinates[<span class="number">0</span>],nodeCoordinate.coordinates[<span class="number">1</span>]</span><br><span class="line">f.close</span><br><span class="line"><span class="comment">################################</span></span><br><span class="line">f=open(<span class="string">'U1U2.dat'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> topValues:</span><br><span class="line">    f.write(str(v.nodeLabel))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">0</span>]))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">1</span>]))</span><br><span class="line">    f.write(<span class="string">'\n'</span>)</span><br><span class="line">f.close</span><br><span class="line">odb.close()</span><br></pre></td></tr></table></figure>
-<p> Using the Python to extract the displacement or someother types of Abaqus data, there are two ways to do this.</p>
-<h3 id="1-Using-the-f-write"><a href="#1-Using-the-f-write" class="headerlink" title="1. Using the f.write()"></a>1. Using the <em>f.write()</em></h3><p>example:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">f=open(<span class="string">'U1U2.dat'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> topValues:</span><br><span class="line">    f.write(str(v.nodeLabel))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">0</span>]))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">1</span>]))</span><br><span class="line">    f.write(<span class="string">'\n'</span>)</span><br><span class="line">f.close</span><br></pre></td></tr></table></figure></p>
-<h3 id="2-Using-the-print"><a href="#2-Using-the-print" class="headerlink" title="2. Using the print"></a>2. Using the <em>print</em></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f=open(<span class="string">'XY.dat'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">for</span> nodeCoordinate <span class="keyword">in</span> topcoor:</span><br><span class="line">    <span class="keyword">print</span> &gt;&gt;f, nodeCoordinate.coordinates[<span class="number">0</span>],nodeCoordinate.coordinates[<span class="number">1</span>]</span><br><span class="line">f.close</span><br></pre></td></tr></table></figure>
-<p>I suggest readers to use the second way, because it is simple and clearly. More importantly, the results can be written into the outfile immediatly if in this way. The first way can also do the same thing, but the results are written into the outfile until you close the Abaqus/CAE software. So the second way <em>print</em> is much more safe than the first one <em>f.write</em>.</p>
-<p><em>NOTE:<br>The Abaqus6.14 is based on the Python2.7.3.</em><br><strong><em><a href="https://abaquslearner.wordpress.com/2014/12/18/which-version-of-python-is-used-by-my-abaqus/" target="_blank" rel="noopener">How to check the version of Python of my Abaqus?</a></em></strong><br><em>Open the Abaqus/CAE and type the following commands:</em><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">import</span> sys</span><br><span class="line">&gt;&gt;&gt;print(sys.version)</span><br><span class="line"><span class="number">2.7</span><span class="number">.3</span> (default, May  <span class="number">1</span> <span class="number">2014</span>, <span class="number">02</span>:<span class="number">56</span>:<span class="number">01</span>) [MSC v<span class="number">.1600</span> <span class="number">64</span> bit (AMD64)]</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://abaquslearner.files.wordpress.com/2014/12/python-config1.png" alt="The figure of the command line interface "></p>
-<p>There are many differences between Python2 and Python3. The detail can be read <a href="https://docs.python.org/3/whatsnew/3.0.html" target="_blank" rel="noopener">here</a>. In this process of the Abaqus data, we only use the old <strong>print</strong>.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/计算GPS实测与模型模拟结果的misfit/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="geopeony">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我的滑板鞋">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/16/计算GPS实测与模型模拟结果的misfit/" itemprop="url">计算GPS实测与模型模拟结果的misfit</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T17:18:12+02:00">
-                2018-05-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/05/16/计算GPS实测与模型模拟结果的misfit/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/16/计算GPS实测与模型模拟结果的misfit/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <a id="more"></a>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="comment">#判断点是否在矩形框内</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isInside</span><span class="params">(xmin, ymin, xmax, ymax, x, y)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> x &gt;= xmin <span class="keyword">and</span> x &lt;= xmax <span class="keyword">and</span> y &gt;= ymin <span class="keyword">and</span> y &lt;= ymax:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">   </span><br><span class="line"><span class="comment">#计算misfit，方法参考Cianetti et al., 2001</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMisfit</span><span class="params">(gpsArray,modArray)</span>:</span></span><br><span class="line">    total_Differ_velo=<span class="number">0</span></span><br><span class="line">    total_gps=<span class="number">0</span></span><br><span class="line">    total_mod=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(gpsArray)):</span><br><span class="line">        total_Differ_velo=total_Differ_velo+np.linalg.norm(gpsArray[i:i+<span class="number">1</span>,<span class="number">2</span>:<span class="number">4</span>]-\</span><br><span class="line">                                                           modArray[i:i+<span class="number">1</span>,<span class="number">2</span>:<span class="number">4</span>])</span><br><span class="line">        total_gps=total_gps+np.sqrt(np.sum(gpsArray[i:i+<span class="number">1</span>,<span class="number">2</span>:<span class="number">4</span>]**<span class="number">2</span>))</span><br><span class="line">        total_mod=total_mod+np.sqrt(np.sum(modArray[i:i+<span class="number">1</span>,<span class="number">2</span>:<span class="number">4</span>]**<span class="number">2</span>))</span><br><span class="line">    misfit=total_Differ_velo/(total_gps+total_mod)</span><br><span class="line">    <span class="keyword">return</span> misfit</span><br><span class="line"><span class="comment">###############################################################################</span></span><br><span class="line">start=time.time()</span><br><span class="line"><span class="comment">#数据格式:-189245.2501278198	3593917.283798576	0.02067	0.01326	单位为 m/a</span></span><br><span class="line">gps=np.loadtxt(<span class="string">r'C:\Users\Xianrui\Desktop\python\GPS.utm.obs'</span>)</span><br><span class="line"><span class="comment">#数据格式： 336.421E+03 3.097E+06 252.67 -160.193 单位为 m</span></span><br><span class="line">mod=np.loadtxt(<span class="string">r'C:\Users\Xianrui\Desktop\python\f0.03_x_y_u1_u2.dat'</span>)</span><br><span class="line"><span class="comment">#模型使用的年数</span></span><br><span class="line">years=<span class="number">20000</span></span><br><span class="line"><span class="comment">#搜索半径，二分之一个边长</span></span><br><span class="line">halfDist=<span class="number">10000</span></span><br><span class="line"><span class="comment">#数据行数</span></span><br><span class="line">gps_rowNum=gps.shape[<span class="number">0</span>]</span><br><span class="line">mod_rowNum=mod.shape[<span class="number">0</span>]</span><br><span class="line"><span class="comment">#构造一个空数组，0行4列</span></span><br><span class="line">mod_smallArrays=np.empty(shape=[<span class="number">0</span>,<span class="number">4</span>])</span><br><span class="line"><span class="comment">##############################################################################</span></span><br><span class="line"><span class="comment">#根据GPS台站位置，筛选出在台站附近的模型节点结果数据</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(gps_rowNum):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(mod_rowNum):</span><br><span class="line">        <span class="keyword">if</span> isInside(gps[i,<span class="number">0</span>]-halfDist,gps[i,<span class="number">1</span>]-halfDist,gps[i,<span class="number">0</span>]+halfDist,\</span><br><span class="line">                    gps[i,<span class="number">1</span>]+halfDist,mod[j,<span class="number">0</span>],mod[j,<span class="number">1</span>]):</span><br><span class="line">            mod_smallArrays=np.vstack((mod_smallArrays,mod[j,:]))</span><br><span class="line"><span class="comment">############################################################################</span></span><br><span class="line"><span class="comment">#得到缩小后的数据体行数</span></span><br><span class="line">mod_small_rowNum=mod_smallArrays.shape[<span class="number">0</span>]</span><br><span class="line"><span class="comment">#构造一个空数组，0行4列,存放与台站最近的模型节点结果</span></span><br><span class="line">mod_finalArray=np.empty(shape=[<span class="number">0</span>,<span class="number">4</span>])</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(gps_rowNum):</span><br><span class="line">    distArrays=np.empty(shape=[<span class="number">0</span>,<span class="number">2</span>])</span><br><span class="line">    gps_c1=np.array([gps[i,<span class="number">0</span>],gps[i,<span class="number">1</span>]])</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(mod_small_rowNum):</span><br><span class="line">        dist=(gps[i,<span class="number">0</span>]-mod_smallArrays[j,<span class="number">0</span>])**<span class="number">2</span>+(gps[i,<span class="number">1</span>]-mod_smallArrays[j,<span class="number">1</span>])**<span class="number">2</span></span><br><span class="line">        <span class="comment">#为缩小计算量，略去了开平方的操作，直接比较距离的平方</span></span><br><span class="line">        distArrays=np.vstack((distArrays,[dist,j])) <span class="comment">#把距离值以及对应的下表j放进一个新数组中，</span></span><br><span class="line">    minIndex=distArrays[:,<span class="number">0</span>].argmin() <span class="comment">#取得最小值对应的下标，新数组</span></span><br><span class="line">    mod_minIndex=int(distArrays[minIndex,<span class="number">1</span>]) <span class="comment">#取得最小值在老数组中的下标，并将浮点型转为整型</span></span><br><span class="line">    mod_line=np.array([mod_smallArrays[mod_minIndex,<span class="number">0</span>],mod_smallArrays[mod_minIndex,<span class="number">1</span>],mod_smallArrays[mod_minIndex,<span class="number">2</span>]/years,mod_smallArrays[mod_minIndex,<span class="number">3</span>]/years])</span><br><span class="line">    mod_finalArray=np.vstack((mod_finalArray,mod_line))</span><br><span class="line">np.savetxt(<span class="string">r'C:\Users\Xianrui\Desktop\python\mod_finalArray.txt'</span>,mod_finalArray,fmt=<span class="string">'%.6e'</span>)</span><br><span class="line">misfit=getMisfit(gps,mod_finalArray) <span class="comment">#调用定义的函数</span></span><br><span class="line">print(misfit)</span><br><span class="line">elapsed=(time.time()-start)</span><br><span class="line">print(<span class="string">"Time used:"</span>,elapsed)</span><br></pre></td></tr></table></figure>
-          
+          <p>其实在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出。这些数据追加在工作目录下的.dat文件中，总体上还是用Python提取比较方便，下述脚本展示了一个工作用的例子：<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/16/使用Python提取ABAQUS计算结果/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -902,7 +746,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
