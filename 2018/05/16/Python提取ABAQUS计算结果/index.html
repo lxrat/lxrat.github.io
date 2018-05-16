@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="其实在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出。这些数据追加在工作目录下的.dat文件中，总体上还是用Python提取比较方便，下述脚本展示了一个工作用的例子：">
+<meta name="description" content="在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出，追加在工作目录下的.dat文件中，但本文则展示了如何使用Python提取结果数据：">
 <meta name="keywords" content="Abaqus,Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python提取ABAQUS计算结果">
 <meta property="og:url" content="http://yoursite.com/2018/05/16/Python提取ABAQUS计算结果/index.html">
 <meta property="og:site_name" content="我的滑板鞋">
-<meta property="og:description" content="其实在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出。这些数据追加在工作目录下的.dat文件中，总体上还是用Python提取比较方便，下述脚本展示了一个工作用的例子：">
+<meta property="og:description" content="在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出，追加在工作目录下的.dat文件中，但本文则展示了如何使用Python提取结果数据：">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://abaquslearner.files.wordpress.com/2014/12/python-config1.png">
-<meta property="og:updated_time" content="2018-05-16T16:48:41.313Z">
+<meta property="og:updated_time" content="2018-05-16T19:10:00.718Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python提取ABAQUS计算结果">
-<meta name="twitter:description" content="其实在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出。这些数据追加在工作目录下的.dat文件中，总体上还是用Python提取比较方便，下述脚本展示了一个工作用的例子：">
+<meta name="twitter:description" content="在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出，追加在工作目录下的.dat文件中，但本文则展示了如何使用Python提取结果数据：">
 <meta name="twitter:image" content="https://abaquslearner.files.wordpress.com/2014/12/python-config1.png">
 
 
@@ -354,7 +354,7 @@
       
 
       
-        <p>其实在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出。这些数据追加在工作目录下的.dat文件中，总体上还是用Python提取比较方便，下述脚本展示了一个工作用的例子：<br><a id="more"></a></p>
+        <p>在Abaqus的inp文件中，用户可以指定自己感兴趣的数据，并加以输出，追加在工作目录下的.dat文件中，但本文则展示了如何使用Python提取结果数据：<br><a id="more"></a></p>
 <h1 id="The-total-Python-script"><a href="#The-total-Python-script" class="headerlink" title="The total Python script:"></a>The total Python script:</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> odbAccess <span class="keyword">import</span> *</span><br><span class="line">odb=openOdb(path=<span class="string">'fraction_0.03_test.odb'</span>)</span><br><span class="line">topNodeSet=odb.rootAssembly.instances[<span class="string">'PART-1-1'</span>].nodeSets[<span class="string">'TOPO'</span>]</span><br><span class="line">displacement=odb.steps[<span class="string">'Step-1'</span>].frames[<span class="number">-1</span>].fieldOutputs[<span class="string">'U'</span>]</span><br><span class="line">topDisplacement=displacement.getSubset(region=topNodeSet)</span><br><span class="line">topValues=topDisplacement.values</span><br><span class="line">topcoor=odb.rootAssembly.instances[<span class="string">'PART-1-1'</span>].nodeSets[<span class="string">'TOPO'</span>].nodes</span><br><span class="line">f=open(<span class="string">'XY.dat'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">for</span> nodeCoordinate <span class="keyword">in</span> topcoor:</span><br><span class="line">    <span class="keyword">print</span> &gt;&gt;f, nodeCoordinate.coordinates[<span class="number">0</span>],nodeCoordinate.coordinates[<span class="number">1</span>]</span><br><span class="line">f.close</span><br><span class="line"><span class="comment">################################</span></span><br><span class="line">f=open(<span class="string">'U1U2.dat'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> topValues:</span><br><span class="line">    f.write(str(v.nodeLabel))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">0</span>]))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">1</span>]))</span><br><span class="line">    f.write(<span class="string">'\n'</span>)</span><br><span class="line">f.close</span><br><span class="line">odb.close()</span><br></pre></td></tr></table></figure>
 <p> Using the Python to extract the displacement or someother types of Abaqus data, there are two ways to do this.</p>
 <h3 id="1-Using-the-f-write"><a href="#1-Using-the-f-write" class="headerlink" title="1. Using the f.write()"></a>1. Using the <em>f.write()</em></h3><p>example:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">f=open(<span class="string">'U1U2.dat'</span>,<span class="string">'w'</span>)</span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> topValues:</span><br><span class="line">    f.write(str(v.nodeLabel))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">0</span>]))</span><br><span class="line">    f.write(<span class="string">' '</span>)</span><br><span class="line">    f.write(str(v.data[<span class="number">1</span>]))</span><br><span class="line">    f.write(<span class="string">'\n'</span>)</span><br><span class="line">f.close</span><br></pre></td></tr></table></figure></p>
